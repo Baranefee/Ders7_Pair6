@@ -1,72 +1,52 @@
 ﻿using Business.Abstracts;
+using DataAccess.Abstract;
 using Entities.Concretes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concretes
 {
-    public class ProductManager : IProductService
-    {
-        private List<Product> products;
-        public ProductManager()
-        {
-            products = new List<Product>();
-            products.Add(new Product() {ProductId=1,CategoryId=1,Name="Kazak",UnitPrice=400 });
-            products.Add(new Product() { ProductId = 2, CategoryId = 1, Name = "Tisort", UnitPrice = 600 });
-        }
-        public Product Add(Product product)
-        {
-            products.Add(product);
+	public class ProductManager : IProductService
+	{
+		private readonly IProductDal _productDal;
 
-            return product;
-        }
+		public ProductManager(IProductDal productDal)
+		{
+			_productDal = productDal;
+		}
 
-        public void Delete(int id)
-        {
-            Product product = products.Find(p=> p.ProductId == id);
-            if (product == null)
-            {
-                throw new Exception("Urun bulunamadi");
+		public void Add(Product product)
+		{
+			_productDal.Add(product);
+		}
 
-            }
-            
-            products.Remove(product);
-        }
+		public void Delete(int id)
+		{
+			Product? product = _productDal.Get(id);
+			if (product == null)
+			{
+				throw new Exception("İlgili id'ye sahip ürün mevcut değil.");
+			}
+			_productDal.Delete(product);
+		
+		}
 
-        public List<Product> GetAll()
-        {
-            return products;
-        }
+		public List<Product> GetAll()
+		{
+			return _productDal.GetAll();
+		}
 
-        public Product GetById(int id)
-        {
-            Product product = products.Find(p => p.ProductId == id);
-            if (product == null)
-            {
-                throw new Exception("Urun bulunamadi");
+		public Product GetById(int id)
+		{
+			Product? product = _productDal.Get(id);
+			if (product == null)
+			{
+				throw new Exception("İlgili id'ye sahip ürün mevcut değil.");
+			}
+			return product;
+		}
 
-            }
-
-            return product;
-        }
-
-        public Product Update(Product product)
-        {
-            Product checkProduct = products.Find(p => p.ProductId == product.ProductId);
-            if (checkProduct == null)
-            {
-                throw new Exception("Urun bulunamadi");
-
-            }
-            checkProduct.Name = product.Name;
-            checkProduct.CategoryId = product.CategoryId;
-            checkProduct.UnitPrice = product.UnitPrice;
-
-            return checkProduct;
-
-        }
-    }
+		public void Update(Product product)
+		{
+			_productDal.Update(product);
+		}
+	}
 }

@@ -1,72 +1,57 @@
 ﻿using Business.Abstracts;
+using DataAccess.Abstract;
 using Entities.Concretes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concretes
 {
-    public class CategoryManager:ICategoryService
-    {
-        private List<Category> categories;
-        public CategoryManager()
-        {
-            categories = new List<Category>();
-            categories.Add(new Category() {  CategoryId = 1, Name = "Giysi" });
-            categories.Add(new Category() {  CategoryId = 2, Name = "Ev esyalari" });
-        }
-        public Category Add(Category category)
-        {
-            categories.Add(category);
+	public class CategoryManager : ICategoryService
+	{
+		private readonly ICategoryDal _categoryDal;
 
-            return category;
-        }
+		public CategoryManager(ICategoryDal categoryDal)
+		{
+			_categoryDal = categoryDal;
+		}
 
-        public void Delete(int id)
-        {
-            Category category = categories.Find(c => c.CategoryId == id);
-            if (category == null)
-            {
-                throw new Exception("Kategori bulunamadi");
+		public void Add(Category category)
+		{
+			_categoryDal.Add(category);
+		}
 
-            }
+		public void Delete(int id)
+		{
+			Category? category = _categoryDal.Get(id);
+			if (category == null)
+			{
+				throw new Exception("İlgili id'ye sahip ürün mevcut değil.");
+			}
+			_categoryDal.Delete(category);
 
-            categories.Remove(category);
-        }
+		}
 
-        public List<Category> GetAll()
-        {
-            return categories;
-        }
+		public Category Get(int id)
+		{
+			return _categoryDal.Get(id);
+		}
 
-        public Category GetById(int id)
-        {
-            Category category = categories.Find(c => c.CategoryId == id);
-            if (category == null)
-            {
-                throw new Exception("Kategori bulunamadi");
+		public List<Category> GetAll()
+		{
+			return _categoryDal.GetAll();
+		}
 
-            }
+		public Category GetById(int id)
+		{
+			Category? category = _categoryDal.Get(id);
+			if (category == null)
+			{
+				throw new Exception("İlgili id'ye sahip ürün mevcut değil.");
+			}
+			return category;
+		}
 
-            return category;
-        }
-
-        public Category Update(Category category)
-        {
-            Category checkCategory = categories.Find(c => c.CategoryId == category.CategoryId);
-            if (checkCategory == null)
-            {
-                throw new Exception("Kategori bulunamadi");
-
-            }
-            checkCategory.Name = category.Name;
-            checkCategory.CategoryId = category.CategoryId;
-           
-
-            return checkCategory;
-
-        }
-    }
+		public void Update(Category category)
+		{
+			_categoryDal.Update(category);
+		}
+	}
 }

@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Entities.Concretes
+﻿namespace Entities.Concretes
 {
-    public class Product
+	public class Product
     {
         public int ProductId { get; set; }
-        public string Name { get; set; }
+        public string ProductName { get; set; }
 
-        public Double UnitPrice { get; set; }
+        public Decimal UnitPrice { get; set; }
 
         public int CategoryId { get; set; }
+        public short UnitsInStock { get; set; }
+
     }
 }

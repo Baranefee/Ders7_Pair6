@@ -33,14 +33,16 @@ namespace WebAPI.Controllers
 
         public IActionResult Add([FromBody]Product product)
         {
-            return Ok(_productService.Add(product));
+            _productService.Add(product);
+			return Ok("Ekleme işlemi başarılı!");
         }
 
         [HttpPut]
 
         public IActionResult Update([FromBody] Product product)
         {
-            return Ok(_productService.Update(product));
+            _productService.Update(product);
+			return Ok("Günceleme işlemi başarılı!");
         }
 
         [HttpDelete]

@@ -26,21 +26,24 @@ namespace WebAPI.Controllers
 
         public IActionResult GetById(int id)
         {
-            return Ok(_categoryService.GetById(id));
+            return Ok(_categoryService.Get(id));
         }
 
         [HttpPost]
 
         public IActionResult Add([FromBody] Category category)
         {
-            return Ok(_categoryService.Add(category));
+            _categoryService.Add(category);
+
+			return Ok("Ekleme işlemi başarılı!");
         }
 
         [HttpPut]
 
         public IActionResult Update([FromBody] Category category)
         {
-            return Ok(_categoryService.Update(category));
+            _categoryService.Update(category);
+			return Ok("Güncelleme işlemi başarılı!");
         }
 
         [HttpDelete]
